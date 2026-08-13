@@ -1,3 +1,5 @@
+<img src="brand/icon_128x128.png" alt="fallback icon" width="128" align="right" />
+
 # fallback
 
 ## Container Variables
