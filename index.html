@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fallback App</title>
+    
+    <!-- Link manifest and tell Trunk to copy it -->
+    <link data-trunk rel="copy-file" href="manifest.json">
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Tell Trunk to copy the service worker -->
+    <link data-trunk rel="copy-file" href="service-worker.js">
+</head>
+<body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful with scope: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('ServiceWorker registration failed: ', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
