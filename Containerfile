@@ -15,5 +15,7 @@ RUN trunk build --release
 FROM registry.access.redhat.com/ubi9/ubi:latest
 RUN dnf install -y nginx && dnf clean all
 COPY --from=builder /app/fallback/dist /usr/share/nginx/html
-EXPOSE 80
+RUN sed -i 's/listen\[\[:space:\]\]\*80/listen 4407/g' /etc/nginx/nginx.conf || true
+RUN sed -i 's/listen       80;/listen 4407;/g' /etc/nginx/nginx.conf || true
+EXPOSE 4407
 CMD ["nginx", "-g", "daemon off;"]
