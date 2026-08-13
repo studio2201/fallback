@@ -11,11 +11,12 @@ COPY fallback /app/fallback
 WORKDIR /app/fallback
 
 RUN trunk build --release
+RUN cargo build --release
 
-FROM registry.access.redhat.com/ubi9/ubi:latest
-RUN dnf install -y nginx && dnf clean all
-COPY --from=builder /app/fallback/dist /usr/share/nginx/html
-RUN sed -i 's/listen\[\[:space:\]\]\*80/listen 4407/g' /etc/nginx/nginx.conf || true
-RUN sed -i 's/listen       80;/listen 4407;/g' /etc/nginx/nginx.conf || true
+FROM registry.access.redhat.com/ubi9/ubi-minimal:latest
+WORKDIR /app
+COPY --from=builder /app/fallback/target/release/fallback /app/server
+COPY --from=builder /app/fallback/dist /app/dist
+ENV BIND_ADDR="0.0.0.0:4407"
 EXPOSE 4407
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["/app/server"]
